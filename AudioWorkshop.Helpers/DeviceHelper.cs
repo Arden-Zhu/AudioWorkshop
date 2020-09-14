@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AudioWorkshop.Helpers
 {
-    public static class WasapiHelper
+    public static class DeviceHelper
     {
         public static List<MMDevice> GetCaptureDevices()
         {
