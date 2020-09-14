@@ -20,7 +20,6 @@ namespace AudioWorkshop.Recorder
         [DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
         int RecordHotkeyId = 1;
-        MMDevice device;
         bool isRecording = false;
         RecordHelper recordHelper;
         PlaybackHelper playbackHelper;
@@ -42,9 +41,9 @@ namespace AudioWorkshop.Recorder
         private void InitDevices()
         {
             var devices = DeviceHelper.GetCaptureDevices();
-            this.device = devices.Find(m => m.FriendlyName == "Microphone (4- Logitech USB Headset)");
+            var device = devices.Find(m => m.FriendlyName == "Microphone (4- Logitech USB Headset)");
 
-            this.recordHelper = new RecordHelper();
+            this.recordHelper = new RecordHelper(device);
             recordHelper.ProgressReport += RecordHelper_ProgressReport;
 
             this.playbackHelper = new PlaybackHelper();
@@ -134,7 +133,7 @@ namespace AudioWorkshop.Recorder
         private void StartRecording()
         {
             this.lastFileName = GetFileName();
-            this.recordHelper.Start(device, lastFileName);
+            this.recordHelper.Start(lastFileName);
         }
 
         private string GetFileName()

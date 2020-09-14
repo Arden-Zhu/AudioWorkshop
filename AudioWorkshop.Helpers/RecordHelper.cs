@@ -11,25 +11,19 @@ namespace AudioWorkshop.Helpers
 {
     public class RecordHelper : IDisposable
     {
-        private IWaveIn captureDevice;
+        private readonly IWaveIn captureDevice;
         // private string outputFilename;
         private WaveFileWriter writer;
 
         public event EventHandler<ProgressReportEventArgs> ProgressReport;
         public event EventHandler<ThreadExceptionEventArgs> OnException;
 
-        public void Start(MMDevice device, string outputFilename)
+        public RecordHelper(MMDevice device)
         {
-            if (device == null)
-                throw new ArgumentNullException();
-
-            // this.outputFilename = outputFilename;
-
-            if (captureDevice == null)
-            {
-                captureDevice = CreateWaveInDevice(device);
-            }
-
+            captureDevice = CreateWaveInDevice(device);
+        }
+        public void Start(string outputFilename)
+        {
             writer = new WaveFileWriter(outputFilename, captureDevice.WaveFormat);
             captureDevice.StartRecording();
         }
@@ -81,7 +75,6 @@ namespace AudioWorkshop.Helpers
         private void Cleanup()
         {
             captureDevice?.Dispose();
-            captureDevice = null;
 
             FinalizeWaveFile();
         }
@@ -89,6 +82,11 @@ namespace AudioWorkshop.Helpers
         public void Dispose()
         {
             Cleanup();
+        }
+
+        public bool IsRecording
+        {
+            get => this.writer != null;
         }
     }
 }

@@ -16,9 +16,9 @@ namespace AudioWorkshop.Helper.Tests
             var devices = DeviceHelper.GetCaptureDevices();
             var device = devices.Find(m => m.FriendlyName == "Microphone (4- Logitech USB Headset)");
 
-            using (var r = new RecordHelper())
+            using (var r = new RecordHelper(device))
             {
-                r.Start(device, "test_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
+                r.Start("test_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
                 Thread.Sleep(5000);
                 r.Stop();
             }
