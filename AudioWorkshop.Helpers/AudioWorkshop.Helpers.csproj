@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlaybackHelper.cs" />
     <Compile Include="ProgressReportEventArgs.cs" />
     <Compile Include="RecordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

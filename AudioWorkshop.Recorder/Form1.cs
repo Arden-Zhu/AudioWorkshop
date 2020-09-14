@@ -23,9 +23,8 @@ namespace AudioWorkshop.Recorder
         MMDevice device;
         bool isRecording = false;
         RecordHelper recordHelper;
+        PlaybackHelper playbackHelper;
 
-        private WaveOutEvent outputDevice;
-        private AudioFileReader audioFile;
         private string lastFileName;
 
         public Form1()
@@ -47,6 +46,14 @@ namespace AudioWorkshop.Recorder
 
             this.recordHelper = new RecordHelper();
             recordHelper.ProgressReport += RecordHelper_ProgressReport;
+
+            this.playbackHelper = new PlaybackHelper();
+            playbackHelper.PlayStopped += PlaybackHelper_PlayStopped;
+        }
+
+        private void PlaybackHelper_PlayStopped(object sender, StoppedEventArgs e)
+        {
+            
         }
 
         private void RecordHelper_ProgressReport(object sender, ProgressReportEventArgs e)
@@ -56,7 +63,7 @@ namespace AudioWorkshop.Recorder
                 // It is just stopped
                 if (chkPlayback.Checked)
                 {
-                    Play(this.lastFileName);
+                    playbackHelper.Play(this.lastFileName);
                 }
                 
                 btnRecord.Text = "Record";
@@ -65,28 +72,6 @@ namespace AudioWorkshop.Recorder
             }
         }
 
-        private void Play(string fileName)
-        {
-            if (outputDevice == null)
-            {
-                outputDevice = new WaveOutEvent();
-                outputDevice.PlaybackStopped += OnPlaybackStopped;
-            }
-            if (audioFile == null)
-            {
-                audioFile = new AudioFileReader(fileName);
-                outputDevice.Init(audioFile);
-            }
-            outputDevice.Play();
-        }
-
-        private void OnPlaybackStopped(object sender, StoppedEventArgs args)
-        {
-            outputDevice.Dispose();
-            outputDevice = null;
-            audioFile.Dispose();
-            audioFile = null;
-        }
         private void RegisterHotKeys()
         {
             int HotKeyCode = (int)Keys.F9;
