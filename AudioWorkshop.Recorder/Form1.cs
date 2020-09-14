@@ -132,6 +132,11 @@ namespace AudioWorkshop.Recorder
 
         private void StartRecording()
         {
+            if (this.playbackHelper.IsPlaying)
+            {
+                playbackHelper.Stop();
+            }
+
             this.lastFileName = GetFileName();
             this.recordHelper.Start(lastFileName);
         }
