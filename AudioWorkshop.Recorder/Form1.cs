@@ -20,15 +20,20 @@ namespace AudioWorkshop.Recorder
         [DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
         int RecordHotkeyId = 1;
+        int CancelHotkeyId = 2;
+
         bool isRecording = false;
         RecordHelper recordHelper;
         PlaybackHelper playbackHelper;
 
         private string lastFileName;
+        private bool isSkipPlaybackOnce;
+        private string applicationFolder;
 
         public Form1()
         {
             InitializeComponent();
+            applicationFolder = Path.GetDirectoryName(Application.ExecutablePath);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -60,11 +65,12 @@ namespace AudioWorkshop.Recorder
             if (this.isRecording && !e.IsRecording)
             {
                 // It is just stopped
-                if (chkPlayback.Checked)
+                if (chkPlayback.Checked && !isSkipPlaybackOnce)
                 {
                     playbackHelper.Play(this.lastFileName);
                 }
-                
+
+                isSkipPlaybackOnce = false;
                 btnRecord.Text = "Record";
                 isRecording = false;
                 Output("Stop recording.");
@@ -73,15 +79,26 @@ namespace AudioWorkshop.Recorder
 
         private void RegisterHotKeys()
         {
-            int HotKeyCode = (int)Keys.F9;
-            Boolean HotKeyRegistered = RegisterHotKey(
-                this.Handle, RecordHotkeyId, 0x0000, HotKeyCode
+            int hotKeyCode = (int)Keys.F9;
+            Boolean hotKeyRegistered = RegisterHotKey(
+                this.Handle, RecordHotkeyId, 0x0000, hotKeyCode
             );
 
-            if (!HotKeyRegistered)
+            if (!hotKeyRegistered)
             {
                 Output("Global Hotkey F9 couldn't be registered !");
             }
+
+            hotKeyCode = (int)Keys.F7;
+            hotKeyRegistered = RegisterHotKey(
+                this.Handle, CancelHotkeyId, 0x0000, hotKeyCode
+            );
+
+            if (!hotKeyRegistered)
+            {
+                Output("Global Hotkey F7 couldn't be registered !");
+            }
+
         }
 
         private void Output(string message)
@@ -100,9 +117,30 @@ namespace AudioWorkshop.Recorder
                 {
                     RecordKeyPressed();
                 }
+                else if (id == CancelHotkeyId)
+                {
+                    CancelKeyPressed();
+                }
             }
 
             base.WndProc(ref m);
+        }
+
+        private void CancelKeyPressed()
+        {
+            if (isRecording)
+            {
+                isSkipPlaybackOnce = true;
+                recordHelper.Stop();
+            }
+            else if (playbackHelper.IsPlaying)
+            {
+                playbackHelper.Stop();
+            }
+            else if (!string.IsNullOrWhiteSpace(lastFileName) && File.Exists(lastFileName))
+            {
+                playbackHelper.Play(lastFileName);
+            }
         }
 
         private void btnRecord_Click(object sender, EventArgs e)
@@ -148,7 +186,7 @@ namespace AudioWorkshop.Recorder
                 Directory.CreateDirectory("Wav");
             }
 
-            return $"Wav/{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.wav";
+            return Path.Combine(applicationFolder, "Wav", $"{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.wav");
         }
     }
 }
