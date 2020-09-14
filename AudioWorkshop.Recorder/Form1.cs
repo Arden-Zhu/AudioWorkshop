@@ -41,6 +41,7 @@ namespace AudioWorkshop.Recorder
             RegisterHotKeys();
 
             InitDevices();
+
         }
 
         private void InitDevices()
@@ -65,6 +66,7 @@ namespace AudioWorkshop.Recorder
             if (this.isRecording && !e.IsRecording)
             {
                 // It is just stopped
+                FlashWindow.StopFlash(this.Handle);
                 if (chkPlayback.Checked && !isSkipPlaybackOnce)
                 {
                     playbackHelper.Play(this.lastFileName);
@@ -131,7 +133,7 @@ namespace AudioWorkshop.Recorder
             if (isRecording)
             {
                 isSkipPlaybackOnce = true;
-                recordHelper.Stop();
+                StopRecording();
             }
             else if (playbackHelper.IsPlaying)
             {
@@ -177,6 +179,8 @@ namespace AudioWorkshop.Recorder
 
             this.lastFileName = GetFileName();
             this.recordHelper.Start(lastFileName);
+
+            FlashWindow.Flash(this.Handle);
         }
 
         private string GetFileName()
