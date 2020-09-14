@@ -54,7 +54,11 @@ namespace AudioWorkshop.Recorder
             if (this.isRecording && !e.IsRecording)
             {
                 // It is just stopped
-                Play(this.lastFileName);
+                if (chkPlayback.Checked)
+                {
+                    Play(this.lastFileName);
+                }
+                
                 btnRecord.Text = "Record";
                 isRecording = false;
                 Output("Stop recording.");
