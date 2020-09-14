@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="DeviceHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecordHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
