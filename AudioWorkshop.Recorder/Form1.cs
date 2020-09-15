@@ -63,20 +63,45 @@ namespace AudioWorkshop.Recorder
 
         private void RecordHelper_ProgressReport(object sender, ProgressReportEventArgs e)
         {
-            if (this.isRecording && !e.IsRecording)
+            if (InvokeRequired)
             {
-                // It is just stopped
-                FlashWindow.StopFlash(this.Handle);
-                if (chkPlayback.Checked && !isSkipPlaybackOnce)
+                BeginInvoke(new EventHandler<ProgressReportEventArgs>(RecordHelper_ProgressReport), sender, e);
+            }
+            else
+            {
+                if (this.isRecording && !e.IsRecording)
                 {
-                    playbackHelper.Play(this.lastFileName);
+                    // It is just stopped
+                    FlashWindow.StopFlash(this.Handle);
+                    if (chkPlayback.Checked && !isSkipPlaybackOnce)
+                    {
+                        playbackHelper.Play(this.lastFileName);
+                    }
+
+                    isSkipPlaybackOnce = false;
+                    btnRecord.Text = "Record";
+                    isRecording = false;
+                    Output("Stop recording.");
+                }
+                else
+                {
+                    lblLength.Text = ConvertSecondToString(e.Seconds);
                 }
 
-                isSkipPlaybackOnce = false;
-                btnRecord.Text = "Record";
-                isRecording = false;
-                Output("Stop recording.");
+                if (e.Exception != null)
+                {
+                    Output(e.Exception);
+                }
             }
+        }
+
+        private string ConvertSecondToString(int seconds)
+        {
+            int second = seconds % 60;
+            seconds = seconds / 60;
+            int minute = seconds % 60;
+            int hour = seconds / 60;
+            return $"{hour.ToString().PadLeft(2, '0')}:{minute.ToString().PadLeft(2, '0')}:{second.ToString().PadLeft(2, '0')}";
         }
 
         private void RegisterHotKeys()
@@ -105,7 +130,7 @@ namespace AudioWorkshop.Recorder
 
         private void Output(string message)
         {
-            this.txtOutput.AppendText(message + "\r\n");
+            this.txtOutput.AppendText($"{message}...{DateTime.Now.ToString("HH:mm:ss")}\r\n");
         }
 
         protected override void WndProc(ref Message m)
@@ -154,15 +179,28 @@ namespace AudioWorkshop.Recorder
         {
             if (!isRecording)
             {
-                StartRecording();
-                btnRecord.Text = "Stop";
                 isRecording = true;
+                try
+                {
+                    StartRecording();
+                }
+                catch (Exception ex)
+                {
+                    Output(ex);
+                }
+                btnRecord.Text = "Stop";
                 Output("Start recording.");
             }
             else
             {
                 StopRecording();
             }
+        }
+
+        private void Output(Exception ex)
+        {
+            Output($"Error: {ex.Message}");
+            Output(ex.StackTrace);
         }
 
         private void StopRecording()

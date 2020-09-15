@@ -12,11 +12,9 @@ namespace AudioWorkshop.Helpers
     public class RecordHelper : IDisposable
     {
         private readonly IWaveIn captureDevice;
-        // private string outputFilename;
         private WaveFileWriter writer;
 
         public event EventHandler<ProgressReportEventArgs> ProgressReport;
-        public event EventHandler<ThreadExceptionEventArgs> OnException;
 
         public RecordHelper(MMDevice device)
         {
@@ -58,12 +56,7 @@ namespace AudioWorkshop.Helpers
         void OnRecordingStopped(object sender, StoppedEventArgs e)
         {
             FinalizeWaveFile();
-            ProgressReport?.Invoke(this, new ProgressReportEventArgs(false, 0));
-
-            if (e.Exception != null)
-            {
-                OnException?.Invoke(this, new ThreadExceptionEventArgs(e.Exception));
-            }
+            ProgressReport?.Invoke(this, new ProgressReportEventArgs(false, 0, e.Exception));
         }
 
         private void FinalizeWaveFile()

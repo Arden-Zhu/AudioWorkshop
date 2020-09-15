@@ -31,6 +31,7 @@
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.btnRecord = new System.Windows.Forms.Button();
             this.chkPlayback = new System.Windows.Forms.CheckBox();
+            this.lblLength = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtOutput
@@ -57,18 +58,29 @@
             this.chkPlayback.AutoSize = true;
             this.chkPlayback.Checked = true;
             this.chkPlayback.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkPlayback.Location = new System.Drawing.Point(127, 22);
+            this.chkPlayback.Location = new System.Drawing.Point(12, 64);
             this.chkPlayback.Name = "chkPlayback";
             this.chkPlayback.Size = new System.Drawing.Size(70, 17);
             this.chkPlayback.TabIndex = 2;
             this.chkPlayback.Text = "Playback";
             this.chkPlayback.UseVisualStyleBackColor = true;
             // 
+            // lblLength
+            // 
+            this.lblLength.AutoSize = true;
+            this.lblLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLength.Location = new System.Drawing.Point(122, 44);
+            this.lblLength.Name = "lblLength";
+            this.lblLength.Size = new System.Drawing.Size(143, 37);
+            this.lblLength.TabIndex = 3;
+            this.lblLength.Text = "00:00:00";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblLength);
             this.Controls.Add(this.chkPlayback);
             this.Controls.Add(this.btnRecord);
             this.Controls.Add(this.txtOutput);
@@ -85,6 +97,7 @@
         private System.Windows.Forms.TextBox txtOutput;
         private System.Windows.Forms.Button btnRecord;
         private System.Windows.Forms.CheckBox chkPlayback;
+        private System.Windows.Forms.Label lblLength;
     }
 }
 
