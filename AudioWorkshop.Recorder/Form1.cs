@@ -83,7 +83,8 @@ namespace AudioWorkshop.Recorder
                     isRecording = false;
                     Output("Stop recording.");
 
-                    var recordedFile = new RecordedFile(lastFileName, e.Seconds);
+                    var recordedFile = new RecordedFile(lastFileName, e.Seconds, ConvertSecondToString(e.Seconds));
+                    AddNewRecordedFile(recordedFile);
                 }
                 else
                 {
@@ -95,6 +96,19 @@ namespace AudioWorkshop.Recorder
                     Output(e.Exception);
                 }
             }
+        }
+
+        private void AddNewRecordedFile(RecordedFile recordedFile)
+        {
+            this.recordedFiles.Add(recordedFile);
+
+            ListViewItem listViewItem = new ListViewItem(recordedFile.onlyFileName);
+            listViewItem.SubItems.Add(recordedFile.length);
+            listViewItem.SubItems.Add(recordedFile.whenCreated.ToString("HH:mm:ss"));
+            listViewItem.SubItems.Add(recordedFile.tag);
+            listViewItem.Tag = recordedFile;
+
+            this.listView1.Items.Add(listViewItem);
         }
 
         private string ConvertSecondToString(int seconds)
