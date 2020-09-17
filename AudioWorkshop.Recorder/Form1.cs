@@ -215,10 +215,19 @@ namespace AudioWorkshop.Recorder
                 playbackHelper.Stop();
             }
 
-            this.lastFileName = GetFileName();
-            this.recordHelper.Start(lastFileName);
+            var fileName = GetFileName();
+            if (fileName == this.lastFileName)
+            {
+                Output("Click too fast");
+            }
+            else
+            {
+                this.lastFileName = fileName;
 
-            FlashWindow.Flash(this.Handle);
+                this.recordHelper.Start(lastFileName);
+
+                FlashWindow.Flash(this.Handle);
+            }
         }
 
         private string GetFileName()
