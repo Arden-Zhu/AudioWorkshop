@@ -55,8 +55,9 @@ namespace AudioWorkshop.Helpers
 
         void OnRecordingStopped(object sender, StoppedEventArgs e)
         {
+            int secondsRecorded = (int)(writer.Length / writer.WaveFormat.AverageBytesPerSecond);
             FinalizeWaveFile();
-            ProgressReport?.Invoke(this, new ProgressReportEventArgs(false, 0, e.Exception));
+            ProgressReport?.Invoke(this, new ProgressReportEventArgs(false, secondsRecorded, e.Exception));
         }
 
         private void FinalizeWaveFile()

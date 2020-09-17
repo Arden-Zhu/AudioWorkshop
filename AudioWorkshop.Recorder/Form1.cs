@@ -29,7 +29,7 @@ namespace AudioWorkshop.Recorder
         private string lastFileName;
         private bool isSkipPlaybackOnce;
         private string applicationFolder;
-
+        private List<RecordedFile> recordedFiles = new List<RecordedFile>();
         public Form1()
         {
             InitializeComponent();
@@ -82,6 +82,8 @@ namespace AudioWorkshop.Recorder
                     btnRecord.Text = "Record";
                     isRecording = false;
                     Output("Stop recording.");
+
+                    var recordedFile = new RecordedFile(lastFileName, e.Seconds);
                 }
                 else
                 {
