@@ -30,6 +30,8 @@ namespace AudioWorkshop.Recorder
         private bool isSkipPlaybackOnce;
         private string applicationFolder;
         private List<RecordedFile> recordedFiles = new List<RecordedFile>();
+        private string nextPlayFile;
+
         public Form1()
         {
             InitializeComponent();
@@ -58,7 +60,18 @@ namespace AudioWorkshop.Recorder
 
         private void PlaybackHelper_PlayStopped(object sender, StoppedEventArgs e)
         {
-            
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler<StoppedEventArgs>(PlaybackHelper_PlayStopped), sender, e);
+            }
+            else
+            {
+                if (this.nextPlayFile != null && File.Exists(nextPlayFile))
+                {
+                    playbackHelper.Play(this.nextPlayFile);
+                    this.nextPlayFile = null;
+                }
+            }
         }
 
         private void RecordHelper_ProgressReport(object sender, ProgressReportEventArgs e)
@@ -254,6 +267,26 @@ namespace AudioWorkshop.Recorder
             }
 
             return Path.Combine(applicationFolder, "Wav", $"{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.wav");
+        }
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count > 0)
+            {
+                string fileName = (listView1.SelectedItems[0].Tag as RecordedFile)?.fileName;
+                if (!string.IsNullOrWhiteSpace(fileName) && File.Exists(fileName))
+                {
+                    if (playbackHelper.IsPlaying)
+                    {
+                        playbackHelper.Stop();
+                        this.nextPlayFile = fileName;
+                    }
+                    else
+                    {
+                        playbackHelper.Play(fileName);
+                    }
+                }
+            }
         }
     }
 }

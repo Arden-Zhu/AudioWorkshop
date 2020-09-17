@@ -40,6 +40,7 @@
             this.columnLength = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnWhenCreated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnTag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnPlay = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tpRecording.SuspendLayout();
             this.tpFiles.SuspendLayout();
@@ -114,6 +115,7 @@
             // 
             // tpFiles
             // 
+            this.tpFiles.Controls.Add(this.btnPlay);
             this.tpFiles.Controls.Add(this.listView1);
             this.tpFiles.Location = new System.Drawing.Point(4, 22);
             this.tpFiles.Name = "tpFiles";
@@ -125,6 +127,7 @@
             // 
             // listView1
             // 
+            this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.listView1.CheckBoxes = true;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnLabel,
@@ -135,6 +138,7 @@
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HideSelection = false;
+            this.listView1.HoverSelection = true;
             this.listView1.Location = new System.Drawing.Point(3, 6);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(684, 410);
@@ -161,6 +165,16 @@
             // 
             this.columnTag.Text = "Tag";
             this.columnTag.Width = 200;
+            // 
+            // btnPlay
+            // 
+            this.btnPlay.Location = new System.Drawing.Point(709, 22);
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.Size = new System.Drawing.Size(75, 23);
+            this.btnPlay.TabIndex = 1;
+            this.btnPlay.Text = "&Play";
+            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // Form1
             // 
@@ -193,6 +207,7 @@
         private System.Windows.Forms.ColumnHeader columnLength;
         private System.Windows.Forms.ColumnHeader columnWhenCreated;
         private System.Windows.Forms.ColumnHeader columnTag;
+        private System.Windows.Forms.Button btnPlay;
     }
 }
 
