@@ -135,14 +135,14 @@ namespace AudioWorkshop.Recorder
 
         private void RegisterHotKeys()
         {
-            int hotKeyCode = (int)Keys.F9;
+            int hotKeyCode = (int)Keys.F6;
             Boolean hotKeyRegistered = RegisterHotKey(
                 this.Handle, RecordHotkeyId, 0x0000, hotKeyCode
             );
 
             if (!hotKeyRegistered)
             {
-                Output("Global Hotkey F9 couldn't be registered !");
+                Output("Global Hotkey F6 couldn't be registered !");
             }
 
             hotKeyCode = (int)Keys.F7;
@@ -211,14 +211,16 @@ namespace AudioWorkshop.Recorder
                 isRecording = true;
                 try
                 {
-                    StartRecording();
+                    if (StartRecording())
+                    {
+                        btnRecord.Text = "Stop";
+                        Output("Start recording.");
+                    }
                 }
                 catch (Exception ex)
                 {
                     Output(ex);
                 }
-                btnRecord.Text = "Stop";
-                Output("Start recording.");
             }
             else
             {
@@ -237,7 +239,7 @@ namespace AudioWorkshop.Recorder
             this.recordHelper.Stop();
         }
 
-        private void StartRecording()
+        private bool StartRecording()
         {
             if (this.playbackHelper.IsPlaying)
             {
@@ -248,6 +250,7 @@ namespace AudioWorkshop.Recorder
             if (fileName == this.lastFileName)
             {
                 Output("Click too fast");
+                return false;
             }
             else
             {
@@ -256,6 +259,7 @@ namespace AudioWorkshop.Recorder
                 this.recordHelper.Start(lastFileName);
 
                 FlashWindow.Flash(this.Handle);
+                return true;
             }
         }
 
